@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RoadMate Bus Booking</title>
+    <meta
+      name="description"
+      content="Search buses, check available seats, and book tickets online with RoadMate."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M17 19h30c4 0 7 3 7 7v17c0 2-2 4-4 4h-2a6 6 0 0 1-11 0H27a6 6 0 0 1-11 0h-2c-2 0-4-2-4-4V26c0-4 3-7 7-7Z' fill='%23ffffff'/%3E%3Cpath d='M18 26h28v11H18z' fill='%23facc15'/%3E%3Ccircle cx='21.5' cy='47' r='3.5' fill='%230f172a'/%3E%3Ccircle cx='42.5' cy='47' r='3.5' fill='%230f172a'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" id="home">
+      <nav class="navbar" aria-label="Main navigation">
+        <a class="brand" href="#home" aria-label="RoadMate home">
+          <span class="brand-mark" aria-hidden="true">RM</span>
+          <span>RoadMate</span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navLinks">
+          Menu
+        </button>
+
+        <div class="nav-links" id="navLinks">
+          <a href="#home">Home</a>
+          <a href="#routes">Routes</a>
+          <a href="#my-booking">My Booking</a>
+          <a href="#contact">Contact Us</a>
+          <button class="nav-action" type="button" id="loginButton">Login / Sign Up</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="heroTitle">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-copy">
+            <p class="eyebrow">Online bus ticket booking</p>
+            <h1 id="heroTitle">Find your bus, choose your seat, and travel with confidence.</h1>
+            <p>
+              Compare trusted buses on popular intercity routes, see live seat availability,
+              and reserve your ticket in a few simple steps.
+            </p>
+          </div>
+
+          <form class="search-form" id="searchForm" aria-label="Search buses">
+            <div class="form-field">
+              <label for="fromCity">From</label>
+              <select id="fromCity" name="fromCity" required>
+                <option value="">Select city</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="toCity">To</label>
+              <select id="toCity" name="toCity" required>
+                <option value="">Select city</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="travelDate">Travel date</label>
+              <input id="travelDate" name="travelDate" type="date" required />
+            </div>
+            <div class="form-field">
+              <label for="passengers">Passengers</label>
+              <input id="passengers" name="passengers" type="number" min="1" max="6" value="1" />
+            </div>
+            <button class="primary-button" type="submit">Search Buses</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="results-section section-shell" id="results" aria-live="polite">
+        <div class="section-heading">
+          <p class="eyebrow">Available buses</p>
+          <h2>Choose the trip that fits your day</h2>
+        </div>
+        <div class="status-message" id="resultsStatus">
+          Search a route to see buses, fares, departure times, and available seats.
+        </div>
+        <div class="results-grid" id="resultsGrid"></div>
+      </section>
+
+      <section class="booking-workspace section-shell" id="bookingPanel" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Seat selection</p>
+          <h2 id="selectedBusTitle">Select your seat</h2>
+        </div>
+
+        <div class="booking-layout">
+          <div>
+            <div class="seat-legend" aria-label="Seat legend">
+              <span><i class="seat sample available"></i> Available</span>
+              <span><i class="seat sample selected"></i> Selected</span>
+              <span><i class="seat sample booked"></i> Booked</span>
+            </div>
+            <div class="seat-map" id="seatMap" aria-label="Bus seat map"></div>
+          </div>
+
+          <form class="passenger-form" id="passengerForm">
+            <h3>Passenger details</h3>
+            <p id="seatHelp">Select seat(s) first to continue.</p>
+            <div class="form-field">
+              <label for="passengerName">Full name</label>
+              <input id="passengerName" name="passengerName" type="text" placeholder="Ayesha Khan" required />
+            </div>
+            <div class="form-field">
+              <label for="phoneNumber">Phone number</label>
+              <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="+92 300 1234567" required />
+            </div>
+            <div class="form-field">
+              <label for="emailAddress">Email address</label>
+              <input id="emailAddress" name="emailAddress" type="email" placeholder="you@example.com" required />
+            </div>
+            <div class="fare-summary" id="fareSummary">No seat selected</div>
+            <button class="primary-button" type="submit">Book Ticket</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section-shell" id="routes">
+        <div class="section-heading">
+          <p class="eyebrow">Famous routes</p>
+          <h2>Popular journeys booked every day</h2>
+        </div>
+        <div class="route-grid" id="routeGrid"></div>
+      </section>
+
+      <section class="my-booking section-shell" id="my-booking">
+        <div class="section-heading">
+          <p class="eyebrow">My booking</p>
+          <h2>Your latest ticket</h2>
+        </div>
+        <div class="booking-card" id="bookingCard">
+          <p>No booking yet. Search a route and reserve your seat to see it here.</p>
+        </div>
+      </section>
+
+      <section class="why-section" aria-labelledby="whyTitle">
+        <div class="section-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Why choose us</p>
+            <h2 id="whyTitle">A simpler way to book bus travel</h2>
+          </div>
+          <div class="why-grid">
+            <article>
+              <span class="feature-icon">1</span>
+              <h3>Live seat view</h3>
+              <p>Check available seats before you book, then pick the seat you prefer.</p>
+            </article>
+            <article>
+              <span class="feature-icon">2</span>
+              <h3>Clear route details</h3>
+              <p>Compare departure time, arrival time, travel duration, bus type, and fare.</p>
+            </article>
+            <article>
+              <span class="feature-icon">3</span>
+              <h3>Quick online booking</h3>
+              <p>Save your ticket details on your device and review them anytime.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-section section-shell" id="contact">
+        <div>
+          <p class="eyebrow">Contact us</p>
+          <h2>Need help with a trip?</h2>
+          <p>Our support team can help with route questions, seat changes, and booking details.</p>
+        </div>
+        <div class="contact-card">
+          <a href="tel:+923001234567">+92 300 1234567</a>
+          <a href="mailto:support@roadmate.example">support@roadmate.example</a>
+          <span>Open daily, 8:00 AM to 11:00 PM</span>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <dialog class="auth-dialog" id="authDialog">
+      <form method="dialog">
+        <button class="close-button" value="close" aria-label="Close login form">x</button>
+        <h2>Welcome to RoadMate</h2>
+        <p>Sign in to keep bookings synced across your devices.</p>
+        <div class="form-field">
+          <label for="authEmail">Email address</label>
+          <input id="authEmail" type="email" placeholder="you@example.com" />
+        </div>
+        <button class="primary-button" value="login">Continue</button>
+      </form>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
